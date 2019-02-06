@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load staticfiles %}
+    {% load static %}
+    <title>{% block title %}Title{% endblock %}</title>
+	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+	<link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet">
+	<link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
+	<link href="{% static 'css/animate.css' %}" rel="stylesheet">
+	<link href="{% static 'css/materialize.css' %}" rel="stylesheet">
+    <link href="{% static 'css/a.css' %}" rel="stylesheet">
+
+    <script src="{% static 'js/jquery-3.3.1.js' %}"></script>
+    <script src="{% static 'js/dateFormat.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/materialize.js' %}"></script>
+
+    <style>
+        body{
+            background-color: #b8c6ff;
+        }
+    </style>
+{% block extra-head %}
+{% endblock %}
+</head>
+<body>
+<header id="header">
+    {% block navbar %}
+    <nav class="navbar  navbar-collapse center-align navbar-static-top" style="background-color: midnightblue; height:11%;">
+      <div class="container-fluid">
+       <div class="navbar-header hide-on-large-only">
+      <button type="button" class="navbar-toggle fa fa-sort-amount-asc" data-toggle="collapse" data-target="#myNavbar" ></button>
+       </div>
+       <div class="collapse navbar-collapse show-on-large" style="background-color: midnightblue " id="myNavbar">
+        <ul class="nav navbar-nav">
+            <li class="home"><a class="navbar-brand" href="{% url 'home' %}">Socio</a></li>
+          <li class="profile"><a href="{% url 'profiles:profileView' request.user %}">Profile</a></li>
+          <li class="request"><a href="{% url 'requests:friendRequests' %} ">Friend Requests</a></li>
+          <li class="message"><a href="{% url 'message:messages' %}">Messages</a></li>
+          <li class="file"><a href="{% url 'message:files'  %}">Files</a></li>
+{#          <li class="chat"><a href="{% url 'chat:chatRooms' %}">Chat</a></li>#}
+{#          <li class="groups"><a href="{% url 'groups:groupList' %}">Groups</a></li>#}
+{#          <li class="generateSOS"><a href="{% url 'message:generateSOS' %}">SOS</a></li>#}
+{#          <li class="SOS"><a href="{% url 'message:SOS' %}">View SOS</a></li>#}
+            {% block extra-navbar %}
+            {% endblock %}
+        </ul>
+
+
+        <form  style="margin-top: -5px; background-color:transparent;" class="navbar-form navbar-left" role="search" method="get" action="{% url 'profiles:allProfiles' %}">
+            <div class="form-group">
+                <input type="text" class="form-control" name="q" value="{{ request.GET.q }}">
+            </div>
+            <button type="submit" class="fa fa-search" style="background-color:transparent; border: 0px;"></button>
+        </form>
+
+
+       {% block logout %}
+          {% if request.user != 'AnonymousUser' %}
+          <a href="{% url 'accounts:logout' %}">
+              <button class="nav navbar-nav navbar-right fa fa-sign-out" style="background-color:transparent; border: 0px;   margin-top: 1.5%; font-size:24px;"> </button>
+          </a>
+          {% endif %}
+      {% endblock %}
+        </div>
+      </div>
+    </nav>
+    {% endblock %}
+
+  </header>
+  <!--/header-->
+
+
+{% block body %}
+{% endblock %}
+
+</body>
+</html>
+

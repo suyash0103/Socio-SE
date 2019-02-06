@@ -1,0 +1,36 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block title %}
+Messages
+{% endblock %}
+{% block extra-head %}
+    <script>
+        $(document).ready(function () {
+            $('.file').addClass('active');
+        })
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+    {% if all_files %}
+        <ul>
+            {%  for m in all_files %}
+                <li><a href="{% url 'profiles:profileView' m.sender %}"><img src="../{% thumbnail m.sender.profile.picture 140x140 %}" width="50" height="50">
+                    {{ m.sender.profile.firstName }} {{ m.sender.profile.lastName }}
+                </a>
+                <div class="container mdi-border">
+                    <a href="{% url 'message:download' m.filepath %}"><p>{{ m.title }}</p></a>
+                </div>
+                <a href="{% url 'message:check' m.filepath %}"><button class="btn-primary">Check</button></a>
+                <a href="{% url 'message:createMessage' m.sender %}"><button class="btn-primary">Reply</button> </a>
+{#                <a href="{% url 'message:uploadFile' m.sender %}"><button class="btn-primary">Send a File</button> </a>#}
+                </li>
+
+            {%  endfor %}
+        </ul>
+    {% else %}
+        <h3>No Files</h3>
+    {%  endif %}
+    </div>
+{% endblock %}

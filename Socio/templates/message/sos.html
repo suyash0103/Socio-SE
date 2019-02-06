@@ -1,0 +1,37 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block title %}
+Messages
+{% endblock %}
+{% block extra-head %}
+    <script>
+        $(document).ready(function () {
+            $('.message').addClass('active');
+        })
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+    {% if all_messages %}
+        <ul>
+            {%  for m in all_messages %}
+                <li><a href="{% url 'profiles:profileView' m.sender %}"><img src="../{% thumbnail m.sender.profile.picture 140x140 %}" width="50" height="50">
+                    {{ m.sender.profile.firstName }} {{ m.sender.profile.lastName }}
+                </a>
+                    <p class="small">{{ m.date }}</p>
+                <div class="container mdi-border">
+                    <p>
+                        {{ m.sender }} is in an emergency
+                    </p>
+                </div>
+                <a href="{% url 'message:location' m.sender.pk %}"><button class="btn-primary">Check Location</button> </a>
+                </li>
+
+            {%  endfor %}
+        </ul>
+    {% else %}
+        <h3>No Messages</h3>
+    {%  endif %}
+    </div>
+{% endblock %}

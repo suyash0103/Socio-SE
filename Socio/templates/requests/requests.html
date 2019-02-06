@@ -1,0 +1,33 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+Friend Requests
+{% endblock %}
+{% block extra-head %}
+    <script>
+        $(document).ready(function () {
+            $('.request').addClass('active');
+        })
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+    {% if all_requests %}
+        <ul>
+            {%  for r in all_requests %}
+                <li><a href="{% url 'profiles:profileView' r.sender %}"><img src="../{{ r.sender.profile.picture }}" width="50" height="50">
+                    {{ r.sender }}</a>
+                    <p class="small">{{ r.date }}</p>
+                <a href="{% url 'requests:acceptRequest' r.sender.id %}">
+                    <button class="btn-sm btn-primary">Accept</button></a>
+                <a href="{% url 'requests:rejectRequest' r.id %}">
+                    <button class="btn-sm btn-primary">Reject</button></a>
+                </li>
+            {%  endfor %}
+        </ul>
+    {% else %}
+        <h3>No Requests</h3>
+    {%  endif %}
+    </div>
+{% endblock %}
