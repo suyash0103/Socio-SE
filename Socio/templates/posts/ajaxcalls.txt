@@ -1,0 +1,36 @@
+            var likeUrl = $(this).attr('href');
+            var like=$(this);
+            $.ajax({
+                url: likeUrl,
+                method: "GET",
+                data: {},
+                success: function (data) {
+                    if(data.liked){
+                        like.text(' Unlike : '+JSON.stringify(data.likes));
+                    }
+                    else{
+                         like.text(' Like : '+JSON.stringify(data.likes));
+                    }
+                }, error:function (error) {
+                    alert(error);
+                }
+            })
+
+
+            var Url = $(this).attr('href');
+            comment_text=$(this).prev().val();
+            comment_div = $(this).parent().siblings('.comments');
+            $.ajax({
+                url: Url,
+                method: "GET",
+                data: {
+                    'text': comment_text.val(),
+                },
+                success: function (data) {
+                    comment='<a href="/profiles/{{ request.user }}"><img src="../{{ request.user.profile.picture }}" width="50" height="50">{{ request.user.profile.firstName }} {{ request.user.profile.lastName }}</a><p class="comment">'+data.text+'</p>'
+                    comment_div.append(comment);
+                    comment_text.val('');
+                }, error:function (error) {
+                    console.log(error);
+                }
+            })

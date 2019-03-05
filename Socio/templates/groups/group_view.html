@@ -1,0 +1,95 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block title %}
+    {{ context.user }}
+{% endblock %}
+
+{% block body %}
+
+
+<main>
+    <div class="main-section">
+        <div class="container">
+            <div class="main-section-data">
+                <div class="row">
+                    <div class="col-lg-3" style="margin-top: 10%;">
+                        <div class="main-left-sidebar">
+                            <div class="user_profile">
+                                <div class="user-pro-img">
+                                    <img src="../{% thumbnail context.group.picture 140x140 %}" alt="">
+                                </div><!--user-pro-img end-->
+
+                                <div class="user_pro_status">
+                                {% if context.admin %}
+                                    <ul class="flw-hr">
+                                        <li><a href="{%  url 'groups:updateGroup' context.group.pk %}" title="" class="flww"> Edit Group</a></li>
+                                        <li><a href="{% url 'groups:deleteGroup' context.group.pk %}" title="" class="hre">Delete Group</a></li>
+                                    </ul>
+                                {% endif %}
+                                    <ul class="flw-status">
+                                        <li>
+                                            <span><a href="{% url 'groups:members' context.group.pk %}" title="" class="">Members</a></span>
+                                            <b>{{ context.members }}</b>
+                                        </li>
+                                    </ul>
+
+                                </div><!--user_pro_status end-->
+
+                            </div><!--user_profile end-->
+                        </div><!--main-left-sidebar end-->
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="main-ws-sec">
+                            <div class="user-tab-sec post-topbar">
+                                <h3>{{ context.group.name }}</h3>
+                                <div class="star-descp user-picy">
+                                    <span>{{ context.group.info }}</span>
+                                </div><!--star-descp end-->
+                                <div class="post-st">
+                                    <ul>
+                                        <li><a class="" href="{% url 'groups:createPost' context.group.pk %}" title="">Create a Post</a></li>
+                                    </ul>
+                                </div>
+                            </div><!--user-tab-sec end-->
+                            <div class="product-feed-tab current" id="feed-dd">
+                                <div class="posts-section">
+                                    {% include "posts/post.html" %}
+                                </div><!--posts-section end-->
+                            </div><!--product-feed-tab end-->
+                        </div><!--main-ws-sec end-->
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="right-sidebar">
+                            <div class="widget widget-jobs">
+                                <div class="sd-title">
+                                    <h3>Members</h3>
+                                </div>
+                                <div class="jobs-list">
+                                    <ul>
+                                        {% for member in context.group.members.all %}
+                                            <li>
+                                            <div class="usy-dt">
+                                                <img src="../{{ member.profile.picture }}" width="40" height="40">
+                                                <div class="usy-name">
+                                                <p><a href="{% url 'profiles:profileView' member %}">
+                                                    {{ member.profile.firstName }} {{ member.profile.lastName }}
+                                                </a></p>
+                                                </div>
+                                            </div>
+                                            </li></br>
+                                        {% endfor %}
+                                    </ul>
+                                </div><!--jobs-list end-->
+                            </div><!--widget-jobs end-->
+
+                        </div><!--right-sidebar end-->
+                    </div>
+                </div>
+            </div><!-- main-section-data end-->
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}

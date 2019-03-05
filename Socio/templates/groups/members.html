@@ -1,0 +1,103 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block body %}
+    <div class="container">
+        <a href="{% url 'groups:groupDetail' group.name %}"><button class="btn btn-info">Group Page</button> </a>
+    <h2>Here are your Friends</h2>
+    <section class="companies-info">
+			<div class="container">
+				<div class="company-title">
+					<h3>All Friends</h3>
+				</div><!--company-title end-->
+				<div class="companies-list">
+					<div class="row">
+                    {%  for friend in request.user.profile.friends.all %}
+						<div class="col-lg-3 col-md-4 col-sm-6 col-12">
+							<div class="company_profile_info">
+								<div class="company-up-info">
+									<img src="/../{{ friend.profile.picture }}" width="100px" height="100px" alt="">
+                                    <h3>{{ friend.profile.firstName }} {{ friend.profile.lastName }}</h3>
+									<h4>{{ friend.profile.bio }}</h4>
+                                    <button class="btn-sm btn-primary add-member follow" href="{% url 'groups:addMember' group.pk %}" friend="{{ friend }}">
+                                        {% if friend in group.members.all %}
+                                            Remove
+                                        {% else %}
+                                            Add
+                                        {% endif %}
+                                    </button>
+
+                                    <button class="btn-sm btn-primary add-admin message-us {% if friend not in group.members.all %} hide {% endif %}" href="{% url 'groups:addAdmin' group.pk %}" friend="{{ friend }}">
+                                        {% if friend in group.admin.all %}
+                                            Remove Admin
+                                        {% else %}
+                                            Make Admin
+                                        {% endif %}
+                                    </button>
+								</div>
+                                <a href="{% url 'profiles:profileView' friend.profile.user %}" title="" class="view-more-pro">View Profile</a>
+							</div><!--company_profile_info end-->
+						</div>
+                    {% endfor %}
+                    </div>
+				</div><!--companies-list end-->
+				<div class="process-comm">
+					<a href="#" title=""><img src="images/process-icon.png" alt=""></a>
+				</div>
+			</div>
+		</section>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.group').addClass('active');
+            $('.add-member').click(function (e) {
+                e.preventDefault();
+                var Url = $(this).attr('href');
+                var button = $(this);
+                $.ajax({
+                    url: Url,
+                    method: "GET",
+                    data: {
+                        'friend': button.attr('friend'),
+                    },
+                    success: function (data) {
+                        if(data.status == 'added'){
+                            console.log(button.next());
+                            button.next().removeClass("hide");
+                            button.text('Remove');
+                        }
+                        else{
+                            button.next().text("Make Admin");
+                            button.next().addClass('hide');
+                            button.text('Add');
+                        }
+                    }, error: function (error) {
+                        alert(error);
+                    }
+                })
+            });
+            $('.add-admin').click(function (e) {
+                e.preventDefault();
+                var Url = $(this).attr('href');
+                var button = $(this);
+                $.ajax({
+                    url: Url,
+                    method: "GET",
+                    data: {
+                        'friend': button.attr('friend'),
+                    },
+                    success: function (data) {
+                        if(data.status == 'added'){
+                            button.text('Remove Admin');
+                        }
+                        else{
+                            button.text('Make Admin');
+                        }
+                    }, error: function (error) {
+                        alert(error);
+                    }
+                })
+            });
+        });
+    </script>
+{% endblock %}

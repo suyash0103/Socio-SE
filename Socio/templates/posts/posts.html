@@ -1,0 +1,96 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+
+{% block title %}
+Posts
+{% endblock %}
+{% block body %}
+
+     <main>
+        <div class="main-section">
+            <div class="container">
+                <div class="main-section-data">
+                    <div class="row">
+                        {% if context.user.profile %}
+                        <div class="col-lg-3 col-md-4 pd-left-none no-pd">
+                            <div class="main-left-sidebar no-margin">
+                                <div class="user-data full-width">
+                                    <div class="user-profile">
+                                        <div class="username-dt">
+                                            <div class="usr-pic">
+                                                <img src="../{% thumbnail context.user.profile.picture 140x140 %}" alt="">
+                                            </div>
+                                        </div><!--username-dt end-->
+                                        <div class="user-specs">
+                                            <h3>{{ context.user.profile.firstName }} {{ context.user.profile.lastName }}</h3>
+                                            <span>{{ context.user.profile.bio }}</span>
+                                        </div>
+                                    </div><!--user-profile end-->
+                                    <ul class="user-fw-status">
+                                        <li>
+                                            <h4>Friends</h4>
+                                            <span>{{ context.friends }}</span>
+                                        </li>
+
+                                        <li>
+                                            <a href="{% url 'profiles:profileView' context.user %}" title="">View Profile</a>
+                                        </li>
+                                    </ul>
+                                </div><!--user-data end-->
+                            </div><!--main-left-sidebar end-->
+                        </div>
+                        <div class="col-lg-6 col-md-8 no-pd">
+                            <div class="main-ws-sec">
+                                <div class="post-topbar">
+                                    <div class="user-picy">
+                                        <img src="../{% thumbnail context.user.profile.picture 140x140 %}" alt="">
+                                    </div>
+                                    <div class="post-st">
+                                        <ul>
+                                            <li><a class="" href="{% url 'posts:createPost' %}" title="">Create a Post</a></li>
+                                        </ul>
+                                    </div><!--post-st end-->
+                                </div><!--post-topbar end-->
+                                <div class="posts-section">
+                                    {% include "posts/post.html" %}
+                                </div><!--posts-section end-->
+                            </div><!--main-ws-sec end-->
+                        </div>
+                        <div class="col-lg-3 pd-right-none no-pd">
+                            <div class="right-sidebar">
+                                <div class="widget widget-jobs">
+                                    <div class="sd-title">
+                                        <h3>Groups</h3>
+                                    </div>
+                                    <div class="jobs-list">
+                                        {% for group in context.groups %}
+                                        <div class="job-info">
+                                            <a href="{% url 'groups:groupDetail' group.name %}" ><div class="user-picy">
+                                                <img src="{{ group.picture }}" alt="">
+                                            </div>
+                                            <div class="job-details">
+                                                <h3>{{ group.name }}</h3>
+                                                <p>{{ group.info }}</p>
+                                            </div></a>
+                                        </div><!--job-info end-->
+                                        {% endfor %}
+                                    </div><!--jobs-list end-->
+                                </div><!--widget-jobs end-->
+                            </div><!--right-sidebar end-->
+                        </div>
+                        {% else %}
+                        <h3>Create your profile <a href="{% url 'profiles:createProfile' context.user.pk %}">here</a></h3>
+                        {% endif %}
+                    </div>
+                </div><!-- main-section-data end-->
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block extra-head %}
+<script>
+    $('.home').addClass('active');
+</script>
+{% endblock %}

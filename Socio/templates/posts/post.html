@@ -1,0 +1,177 @@
+{% load thumbnail %}
+{% load staticfiles %}
+
+{% if context.all_posts %}
+        <ul>
+            {%  for m in context.all_posts %}
+                <li id="{{ m.id }}" >
+                <div class="post-bar">
+                    <div class="post_topbar">
+                        <div class="usy-dt">
+                            {% if m.group %}
+                            <img src="../{% thumbnail m.group.picture 50x50 %}" alt="">
+                            <div class="usy-name col-sm-2"><h2><a href="{% url 'groups:groupDetail' m.group.name %}">
+                                {{ m.group.name }}
+                            </a></h2></div>
+                            {% endif %}
+                            <img src="../{% thumbnail m.owner.profile.picture 40x40 %}" alt="">
+                            <div class="usy-name">
+                            <h3><a href="{% url 'profiles:profileView' m.owner %}">
+                                {{ m.owner.profile.firstName }} {{ m.owner.profile.lastName }}
+                            </a></h3>
+                                <span><img src="{% static 'images/clock.png' %}" alt="">{{ m.date }}</span>
+                            </div>
+                        </div>
+                        {% if m.owner == request.user %}
+                        <div class="ed-opts">
+                            <a href="#" title="" class="ed-opts-open"><i class="la la-ellipsis-v"></i></a>
+                            <ul class="ed-options">
+                                <li><a href="{% url 'posts:editPost' m.pk %}" title="">Edit</a></li>
+                                <li><a href="{% url 'posts:deletePost' m.pk %}" title="">Delete</a></li>
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="job_descp">
+                        <h3>{{ m.title }}</h3>
+                        {% if m.image %}
+                            <div class="post-image">
+                            <img src="../{{ m.image }} " width="100%;"></div>
+                        {% endif %}
+                        {% if m.file %}
+                            <div class="container mdi-border">
+                            <a href="{% url 'posts:downloadFile' m.filepath %}"><p>{{ m.title }}</p></a>
+                            </div>
+                        {% endif %}
+                        <p>{{ m.text }}</p>
+                        <button class="btn-primary btn-sm like-button" type="submit">
+                        {% if request.user in m.likes.all %}Unlike
+                        {% else %}Like
+                        {% endif %}</button>
+                        <span>{{ m.likes.count }}</span>
+
+                    </div>
+
+                <div class="container post-comments">
+                <div class="comments">
+                <ul>
+                    {% for comment in m.comment_post.all %}
+                        <li>
+                        <div class="usy-dt">
+                            <img src="../{{ m.owner.profile.picture }}" width="40" height="40">
+                            <div class="usy-name">
+                            <p><a href="{% url 'profiles:profileView' comment.owner %}">
+                                {{ comment.owner.profile.firstName }} {{ comment.owner.profile.lastName }}
+                            </a></p>
+                            </div>
+                        </div>
+                        <p class="comment">{{ comment.text }}</p>
+                        </li></br>
+                    {% endfor %}
+                </ul>
+                </div>
+                <br>
+                <div class="comment-form">
+                    <input class="comment-text col-sm-9 " type="text" placeholder="Add a Comment">
+                    <input class="btn-primary comment-button " type="submit" value="Comment">
+                </div>
+                </div>
+                </div><!--post-bar end-->
+                </li>
+            {% endfor %}
+        </ul>
+
+
+    {% else %}
+        <h3>No Posts</h3>
+    {%  endif %}
+
+<script src="http://localhost:4000/socket.io/socket.io.js"></script>
+<script>
+    var host = 'localhost';
+    var port = '4000';
+
+    var socket = io(host + ':' + port);
+
+
+    $(document).ready(function () {
+        $('.like-button').click(function (e) {
+            e.preventDefault();
+            var post=$($(this).parents('li')[0]);
+            var post_id=post.attr('id');
+            var user = "{{ request.user }}";
+            var like = $(this).text().trim();
+            var likes = parseInt($(this).next().text().trim());
+            if(like=="Like"){
+                likes=likes+1;
+                like="Unlike";
+            }
+            else{
+                likes=likes-1;
+                like="Like";
+            }
+            likeObject={
+                "user":user,
+                "post_id":post_id,
+                "like":like,
+                "likes": likes
+
+            };
+            socket.emit('like', likeObject);
+
+        });
+        $('.comment-button').click(function (e) {
+            e.preventDefault();
+            var post=$($(this).parents('li')[0]);
+            var post_id=post.attr('id');
+            var user = "{{ request.user }}";
+            var comment_text = $(this).prev().val();
+
+
+            commentObject={
+                "user":user,
+                "post_id":post_id,
+                "comment_text":comment_text
+
+            };
+
+            socket.emit('comment', commentObject);
+            $(this).prev().val('');
+
+        });
+
+        socket.on('getLike', function(likeObject) {
+        // gets the fields of the message
+            var post_id = likeObject.post_id;
+            var post = $('#'+post_id);
+            var btn = post.find('.like-button')[0];
+            if(likeObject.user=="{{ request.user }}"){
+                $(btn).text(likeObject.like);
+            }
+            $(btn).next().text(likeObject.likes);
+        });
+
+        socket.on('getComment', function(commentObject) {
+        // gets the fields of the message
+            var post_id = commentObject.post_id;
+            $.ajax({
+                url: '{% url 'posts:getUser' %}',
+                method: "GET",
+                data: {
+                    'user': commentObject.user
+                },
+                success: function (data) {
+                    var comment_text = commentObject.comment_text;
+                    var post = $('#'+post_id);
+                    var comment_div = $(post.find('.comments')[0]);
+                    comment='<div class="usy-dt"> <img src="../'+ data.picture +'" width="40" height="40"><div class="usy-name"><p><a href="/profiles/"'+ data.username +'>'+data.firstName+' '+data.lastName+'</a></p></div></div><p class="comment">'+comment_text+'</p></li></br>';
+                     {#comment='<li><a href="/profiles/"'+ data.username +'><img src="../'+ data.picture +'" width="40" height="40">'+data.firstName+' '+data.lastName+'</a><p class="comment">'+comment_text+'</p></li>';#}
+                    comment_div.append(comment);
+
+                }, error:function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
