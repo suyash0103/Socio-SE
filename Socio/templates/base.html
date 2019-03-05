@@ -1,81 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    {% load staticfiles %}
-    {% load static %}
-    <title>{% block title %}Title{% endblock %}</title>
-	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
-	<link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet">
-	<link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
-	<link href="{% static 'css/animate.css' %}" rel="stylesheet">
-	<link href="{% static 'css/materialize.css' %}" rel="stylesheet">
-    <link href="{% static 'css/a.css' %}" rel="stylesheet">
-
-    <script src="{% static 'js/jquery-3.3.1.js' %}"></script>
-    <script src="{% static 'js/dateFormat.js' %}"></script>
-    <script src="{% static 'js/bootstrap.js' %}"></script>
-    <script src="{% static 'js/materialize.js' %}"></script>
-
-    <style>
-        body{
-            background-color: #b8c6ff;
-        }
-    </style>
+<meta charset="UTF-8">
+ {% load staticfiles %}
+{% load static %}
+<title>{% block title %}Title{% endblock %}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/line-awesome.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/line-awesome-font-awesome.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/slick.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'lib/slick-theme.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}">
+<script src="{% static 'js/jquery-3.3.1.js' %}"></script>
+<script src="{% static 'js/dateFormat.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/popper.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.mCustomScrollbar.js' %}"></script>
+<script type="text/javascript" src="{% static 'lib/slick.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/scrollbar.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/script.js' %}"></script>
 {% block extra-head %}
 {% endblock %}
 </head>
+
+
 <body>
-<header id="header">
-    {% block navbar %}
-    <nav class="navbar  navbar-collapse center-align navbar-static-top" style="background-color: midnightblue; height:11%;">
-      <div class="container-fluid">
-       <div class="navbar-header hide-on-large-only">
-      <button type="button" class="navbar-toggle fa fa-sort-amount-asc" data-toggle="collapse" data-target="#myNavbar" ></button>
-       </div>
-       <div class="collapse navbar-collapse show-on-large" style="background-color: midnightblue " id="myNavbar">
-        <ul class="nav navbar-nav">
-            <li class="home"><a class="navbar-brand" href="{% url 'home' %}">Socio</a></li>
-          <li class="profile"><a href="{% url 'profiles:profileView' request.user %}">Profile</a></li>
-          <li class="request"><a href="{% url 'requests:friendRequests' %} ">Friend Requests</a></li>
-          <li class="message"><a href="{% url 'message:messages' %}">Messages</a></li>
-          <li class="file"><a href="{% url 'message:files'  %}">Files</a></li>
-{#          <li class="chat"><a href="{% url 'chat:chatRooms' %}">Chat</a></li>#}
-{#          <li class="groups"><a href="{% url 'groups:groupList' %}">Groups</a></li>#}
-{#          <li class="generateSOS"><a href="{% url 'message:generateSOS' %}">SOS</a></li>#}
-{#          <li class="SOS"><a href="{% url 'message:SOS' %}">View SOS</a></li>#}
-            {% block extra-navbar %}
-            {% endblock %}
-        </ul>
+	
+
+	<div class="wrapper">
+
+    <header id="header">
+        <div class="container">
+            {% block navbar %}
+            <div class="header-data">
+                <div class="logo">
+                    <a href="{% url 'home' %}" title=""><img src="{% static 'images/logo.png' %}" alt=""></a>
+                </div><!--logo end-->
+                <div class="search-bar">
+                    <form  class="navbar-form navbar-left" role="search" method="get" action="{% url 'profiles:allProfiles' %}">
+                        <input type="text" class="form-control" name="q" value="{{ request.GET.q }}">
+                        <button type="submit"><i class="la la-search"></i></button>
+                    </form>
+                </div><!--search-bar end-->
+                <nav>
+                    <ul>
+                        <li class="home">
+                            <a href="{% url 'home' %}" title="">
+                                <span><img src="{% static 'images/icon1.png' %}" alt=""></span>
+                                Home
+                            </a>
+                        </li>
+                        <li class="profile">
+                            <a href="{% url 'profiles:profileView' request.user %}" title="">
+                                <span><img src="{% static 'images/icon3.png' %}" alt=""></span>
+                                Profile
+                            </a>
+                        </li>
+                        <li class="request">
+                            <a href="{% url 'requests:friendRequests' %}" title="">
+                                <span><img src="{% static 'images/icon4.png' %}" alt=""></span>
+                                Friend Requests
+                            </a>
+                        </li>
+                        <li class="message">
+                            <a href="{% url 'message:messages' %}" title="" class="not-box-open">
+                                <span><img src="{% static 'images/icon6.png' %}" alt=""></span>
+                                Messages
+                            </a>
+                        </li>
+                        <li class="file">
+                            <a href="{% url 'message:files'  %}" title="">
+                                <span><img src="{% static 'images/icon5.png' %}" alt=""></span>
+                                Files
+                            </a>
+                        </li>
+                        <li class="chat">
+                            <a href="{% url 'chat:chatRooms'  %}" title="">
+                                <span><img src="{% static 'images/chat.png' %}" width="20px" style="margin-top: -10%;" alt=""></span>
+                                Chat
+                            </a>
+                        </li>
+                        <li class="groups">
+                            <a href="{% url 'groups:groupList' %}" title="">
+                                <span><img src="{% static 'images/icon2.png' %}" alt=""></span>
+                                Groups
+                            </a>
+                        </li>
+                        <li class="generateSOS">
+                            <a href="{% url 'message:generateSOS' %}" title="" class="not-box-open">
+                                <span><img src="{% static 'images/icon7.png' %}" alt=""></span>
+                                SOS
+                            </a>
+                        </li>
+                        <li class="SOS">
+                            <a href="{% url 'message:SOS' %}" title="" class="not-box-open">
+                                <span><img src="{% static 'images/icon9.png' %}" alt=""></span>
+                                View SOS
+                            </a>
+                        </li>
+                    </ul>
+                </nav><!--nav end-->
+                <div class="menu-btn">
+                    <a href="#" title=""><i class="fa fa-bars"></i></a>
+                </div><!--menu-btn end-->
 
 
-        <form  style="margin-top: -5px; background-color:transparent;" class="navbar-form navbar-left" role="search" method="get" action="{% url 'profiles:allProfiles' %}">
-            <div class="form-group">
-                <input type="text" class="form-control" name="q" value="{{ request.GET.q }}">
-            </div>
-            <button type="submit" class="fa fa-search" style="background-color:transparent; border: 0px;"></button>
-        </form>
+            </div><!--header-data end-->
 
-
-       {% block logout %}
-          {% if request.user != 'AnonymousUser' %}
-          <a href="{% url 'accounts:logout' %}">
-              <button class="nav navbar-nav navbar-right fa fa-sign-out" style="background-color:transparent; border: 0px;   margin-top: 1.5%; font-size:24px;"> </button>
-          </a>
-          {% endif %}
-      {% endblock %}
+        {% endblock %}
         </div>
-      </div>
-    </nav>
+    {% block logout %}
+        {% if request.user != 'AnonymousUser' %}
+        <a href="{% url 'accounts:logout' %}">
+            <div class="nav navbar-nav navbar-right fa fa-sign-out" style="float: right; color: white ; border: 0px;   margin-top: 1%; font-size:24px;"> </div>
+         </a>
+        {% endif %}
+    {% endblock %}
+    </header><!--header end-->
+
+    {% block body %}
+
     {% endblock %}
 
-  </header>
-  <!--/header-->
+	</div><!--theme-layout end-->
 
-
-{% block body %}
+{% block map %}
 {% endblock %}
+
+
+
+
+
 
 </body>
 </html>
-

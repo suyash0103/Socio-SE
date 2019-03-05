@@ -1,20 +1,40 @@
 {%  extends 'base.html' %}
 {% load staticfiles %}
 {% load thumbnail %}
+{% block title %}
+My Friends
+{% endblock %}
 {% block body %}
-    {% if all_friends %}
-        <h2>My Friend List</h2>
-        <ul>
-            {%  for friend in all_friends %}
-                <li >
-                    <div style="display: inline "><a href="{% url 'profiles:profileView' friend %}"><img src="../{% thumbnail friend.profile.picture 140x140 %}" width="100" height="100">
-                    {{ friend.profile.firstName }} {{ friend.profile.lastName }}
-                    </a></div>
-                    <a href="{% url 'profiles:removeFriend' friend.pk %}"><button class="btn-info" style="display: inline">Remove Friend</button></a>
-                </li>
-            {%  endfor %}
-        </ul>
-    {% else %}
-        <h3>No Profiles</h3>
-    {%  endif %}
+		<section class="companies-info">
+			<div class="container">
+				<div class="company-title">
+					<h3>All Friends</h3>
+				</div><!--company-title end-->
+				<div class="companies-list">
+					<div class="row">
+                    {%  for friend in all_friends %}
+						<div class="col-lg-3 col-md-4 col-sm-6 col-12">
+							<div class="company_profile_info">
+								<div class="company-up-info">
+									<img src="../{{ friend.profile.picture }}" width="100px" height="100px" alt="">
+                                    <h3>{{ friend.profile.firstName }} {{ friend.profile.lastName }}</h3>
+									<h4>{{ friend.profile.bio }}</h4>
+                                    <ul>
+										<li><a href="{% url 'profiles:removeFriend' friend.id %}" title="" class="follow"><i class="la la-minus"></i>Unfriend</a></li>
+										<li><a href="{% url 'message:createMessage' friend %}" title="" class="message-us"><i class="fa fa-envelope"></i></a></li>
+									</ul>
+								</div>
+                                <a href="{% url 'profiles:profileView' friend.profile.user %}" title="" class="view-more-pro">View Profile</a>
+							</div><!--company_profile_info end-->
+						</div>
+                    {% endfor %}
+                    </div>
+				</div><!--companies-list end-->
+				<div class="process-comm">
+					<a href="#" title=""><img src="images/process-icon.png" alt=""></a>
+				</div>
+			</div>
+		</section><!--companies-info end-->
+
+
 {% endblock %}

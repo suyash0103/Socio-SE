@@ -7,15 +7,15 @@
 {% block title %}Log In{% endblock %}
 
 
-{% block form_heading %}Please Log In{% endblock %}
 
     {% block form %}
-    <div class="container">
-        {% csrf_token %}
-        {% crispy form %}
-    </div>
-    <div class ="container">
-        <h5>Dont have an account?</h5>
-        <a href="{% url 'accounts:signup' %}"><button class="btn">Sign up</button></a>
+    <div class="col-sm-4  post-project" style="margin-left: 30%;">
+        <h3>Please Login</h3>
+        <div class="post-project-fields">
+            {% csrf_token %}
+            {% crispy form %}
+            <h5>Dont have an account?</h5>
+            <a href="{% url 'accounts:signup' %}"><button class="btn active">Sign up</button></a>
+        </div>
     </div>
     {% endblock form %}

@@ -1,0 +1,50 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block title %}
+    {{ context.user }}
+{% endblock %}
+
+{% block body %}
+    <div class="container ">
+    {% if context.profile is not None %}
+        <img src="../{% thumbnail context.profile.picture 140x140 %}" width="200" height="200"><br>
+        {% if context.valid %}
+            <script>
+                $(document).ready(function () {
+                    $('.profile').addClass('active');
+                })
+            </script>
+            <a href="{%  url 'profiles:editProfile' context.user.id %}"><button class="btn-primary btn-sm ">Edit Profile</button></a>
+            <a href="{% url 'profiles:friendList' %}"><button class="btn-info">Friend List</button></a>
+        {% elif context.friendship == 'friends' %}
+            <p>{{ context.user }} is your friend.</p>
+            <a href="{% url 'message:createMessage' context.user %}"><button class="btn-primary">Message</button> </a>
+            <a href="{% url 'message:uploadFile' context.user %}"><button class="btn-primary">Send File</button> </a>
+            <a href="{% url 'profiles:removeFriend' context.user.id %}"><button class="btn-primary">Unfriend</button> </a>
+        {% elif context.friendship == 'requested' %}
+            <p>Friend request sent</p>
+        {% else %}
+            <a href="{% url 'requests:newFriendRequest' context.user.id %}"><button class="btn-primary btn-sm ">Send Friend Request</button></a>
+        {% endif %}
+        <h1>{{ context.profile.firstName }}</h1>
+        <h1>{{ context.profile.lastName }}</h1>
+        <p>{{ context.profile.bio }}</p>
+
+        <div>
+        <h3>{{ context.profile.firstName }}'s Posts</h3>
+            {% include "posts/post.html" %}
+        </div>
+
+    {% else %}
+        <h2>Profile of {{ context.user }} is not yet set. </h2>
+        {% if context.valid %}<a href="{%  url 'profiles:createProfile' context.user.id %}"><button>Add Profile</button></a>{% endif %}
+    {% endif %}
+    </div>
+
+
+{% endblock %}
+
+{% block extra-head %}
+
+{% endblock %}

@@ -5,17 +5,17 @@
 
 {% block title %}{{ block.super }}Sign Up{% endblock %}
 
-{% block form_heading %}Signing Up is Free{% endblock %}
-
 {% block form %}
-  {% csrf_token %}
-    {% crispy form %}
+    <div class="col-sm-4  post-project" style="margin-left: 30%;">
+        <h3>Signing Up is Free</h3>
+        <div class="post-project-fields">
+            {% csrf_token %}
+            {% crispy form %}
+            <p>
+              Already signed up? <a href="{% url 'accounts:login' %}">Log in</a>.
+            </p>
+        </div>
+    </div>
 
-
-  <div class="form-message">
-    <p>
-      Already signed up? <a href="{% url 'accounts:login' %}">Log in</a>.
-    </p>
-  </div>
 {% endblock form %}
 

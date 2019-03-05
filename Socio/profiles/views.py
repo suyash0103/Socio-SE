@@ -7,16 +7,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from .models import *
-# from groups.models import *
-# from posts.models import *
+from groups.models import *
+from posts.models import *
 # Create your views here.
 
 
 User = get_user_model()
-
-@login_required(login_url='/login')
-def startView(request):
-    return redirect("profiles:profileView",request.user)
 
 class ProfileView(LoginRequiredMixin, generic.DetailView):
     login_url = '/login'
@@ -38,14 +34,16 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                 friendship="friends"
         try:
             profile=Profile.objects.get(user=user)
+            friends = profile.friends.count()
         except:
             profile=None
 
-        # p = set(user.post_owner.all())
-        # p = reversed(list(p))
-        p=[]
+        p = set(user.post_owner.all())
+        p = reversed(list(p))
 
-        return {'profile' :profile,'user':user,'valid':valid,'friendship':friendship, 'all_posts': p}
+        groups = user.group_member.all()
+
+        return {'profile' :profile,'user':user,'valid':valid,'friendship':friendship, 'all_posts': p, 'friends':friends, 'groups': groups}
 
 class AllProfilesView(LoginRequiredMixin, generic.ListView):
     login_url = '/login'
@@ -56,9 +54,9 @@ class AllProfilesView(LoginRequiredMixin, generic.ListView):
         query=self.request.GET['q']
         firstname = Profile.objects.filter(firstName__contains=query)
         lastName = Profile.objects.filter(lastName__contains=query)
-        # groupName = Group.objects.filter(name__contains=query)
+        groupName = Group.objects.filter(name__contains=query)
         q=list(firstname.union(lastName))
-        # q.extend(list(groupName))
+        q.extend(list(groupName))
         return q
 
 
@@ -124,7 +122,11 @@ def friendList(request):
     context={
         'all_friends':request.user.profile.friends.all()
     }
+
     return render(request,'profiles/friendList.html',context)
+
+
+
 
 @login_required(login_url='/login')
 def removeFriend(request,pk):

@@ -4,18 +4,28 @@
 
 {%  block body %}
 
-    <form action="" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        {% for field in form %}
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <span class="text-danger small">{{ field.errors }}</span>
+    <div class="post-project">
+            <h3>Profile Update</h3>
+            <div class="post-project-fields">
+                <form action="" method="post" enctype="multipart/form-data" style="margin-left: 25%;">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="row container">
+{#                            <div class="col-sm-offset-2 col-sm-8">#}
+{#                                <span class="text-danger small">{{ field.errors }}</span>#}
+{#                            </div>#}
+                            <label class="control-label col-sm-2 " for="title">{{ field.label_tag }}</label>
+                            <div class="col-sm-4">{{ field }}</div>
+                            <br>
+                        </div>
+                    {% endfor %}
+                <div>
+                    <ul style="margin-left: 12.5%;">
+                        <li><button class="active" type="submit" value="post">Update</button></li>
+                        <li><a href="{% url 'home' %}" title="">Cancel</a></li>
+                    </ul>
                 </div>
-                <label class="control-label col-sm-2 " for="title">{{ field.label_tag }}</label>
-                <div class="col-sm-10 ">{{ field }}</div>
-            </div>
-        {% endfor %}
-        <button type="submit">Submit</button>
-    </form>
+                </form>
+            </div><!--post-project-fields end-->
+        </div><!--post-project end-->
 {% endblock %}
