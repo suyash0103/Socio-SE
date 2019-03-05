@@ -1,0 +1,183 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Geolocation</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/line-awesome.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/line-awesome-font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/slick.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/slick-theme.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css' %}">
+    <script src="{% static 'js/jquery-3.3.1.js' %}"></script>
+    <script src="{% static 'js/dateFormat.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/popper.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.mCustomScrollbar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/slick.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/scrollbar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+  </head>
+  <body>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+        <header id="header">
+        <div class="container">
+            {% block navbar %}
+            <div class="header-data">
+                <div class="logo">
+                    <a href="{% url 'home' %}" title=""><img src="{% static 'images/logo.png' %}" alt=""></a>
+                </div><!--logo end-->
+                <div class="search-bar">
+                    <form  class="navbar-form navbar-left" role="search" method="get" action="{% url 'profiles:allProfiles' %}">
+                        <input type="text" class="form-control" name="q" value="{{ request.GET.q }}">
+                        <button type="submit"><i class="la la-search"></i></button>
+                    </form>
+                </div><!--search-bar end-->
+                <nav>
+                    <ul>
+                        <li class="home">
+                            <a href="{% url 'home' %}" title="">
+                                <span><img src="{% static 'images/icon1.png' %}" alt=""></span>
+                                Home
+                            </a>
+                        </li>
+                        <li class="profile">
+                            <a href="{% url 'profiles:profileView' request.user %}" title="">
+                                <span><img src="{% static 'images/icon3.png' %}" alt=""></span>
+                                Profile
+                            </a>
+                        </li>
+                        <li class="request">
+                            <a href="{% url 'requests:friendRequests' %}" title="">
+                                <span><img src="{% static 'images/icon4.png' %}" alt=""></span>
+                                Friend Requests
+                            </a>
+                        </li>
+                        <li class="message">
+                            <a href="{% url 'message:messages' %}" title="" class="not-box-open">
+                                <span><img src="{% static 'images/icon6.png' %}" alt=""></span>
+                                Messages
+                            </a>
+                        </li>
+                        <li class="file">
+                            <a href="{% url 'message:files'  %}" title="">
+                                <span><img src="{% static 'images/icon5.png' %}" alt=""></span>
+                                Files
+                            </a>
+                        </li>
+                        <li class="chat">
+                            <a href="{% url 'chat:chatRooms'  %}" title="">
+                                <span><img src="{% static 'images/chat.png' %}" width="20px" style="margin-top: -10%;" alt=""></span>
+                                Chat
+                            </a>
+                        </li>
+                        <li class="groups">
+                            <a href="{% url 'groups:groupList' %}" title="">
+                                <span><img src="{% static 'images/icon2.png' %}" alt=""></span>
+                                Groups
+                            </a>
+                        </li>
+                        <li class="generateSOS">
+                            <a href="{% url 'message:generateSOS' %}" title="" class="not-box-open">
+                                <span><img src="{% static 'images/icon7.png' %}" alt=""></span>
+                                SOS
+                            </a>
+                        </li>
+                        <li class="SOS">
+                            <a href="{% url 'message:SOS' %}" title="" class="not-box-open">
+                                <span><img src="{% static 'images/icon9.png' %}" alt=""></span>
+                                View SOS
+                            </a>
+                        </li>
+                    </ul>
+                </nav><!--nav end-->
+                <button class="follow btn" style="margin-top: 1%;"><a href="{% url 'chat:chats' room.id %}" class="not-box-open">
+                    Back to chat
+                </a></button>
+                <div class="menu-btn">
+                    <a href="#" title=""><i class="fa fa-bars"></i></a>
+                </div><!--menu-btn end-->
+
+
+            </div><!--header-data end-->
+
+        {% endblock %}
+        </div>
+    {% block logout %}
+        {% if request.user != 'AnonymousUser' %}
+        <a href="{% url 'accounts:logout' %}">
+            <div class="nav navbar-nav navbar-right fa fa-sign-out" style="float: right; color: white ; border: 0px;   margin-top: 1%; font-size:24px;"> </div>
+         </a>
+        {% endif %}
+    {% endblock %}
+    </header><!--header end-->
+
+
+    .
+    <div id="map"></div>
+    <script>
+      // Note: This example requires that you consent to location sharing when
+      // prompted by your browser. If you see the error "The Geolocation service
+      // failed.", it means you probably did not give permission for the browser to
+      // locate you.
+      var map, infoWindow;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 6
+        });
+        infoWindow = new google.maps.InfoWindow;
+
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent("{{ member }}");
+            infoWindow.open(map);
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+      }
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+        infoWindow.open(map);
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCD1dTQZSGdJBuAmgbNt6QX1boH930n3CY&callback=initMap">
+    </script>
+  </body>
+</html>

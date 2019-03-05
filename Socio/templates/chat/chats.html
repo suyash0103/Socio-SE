@@ -1,0 +1,59 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+
+{% load thumbnail %}
+{% block title %}
+Chats
+{% endblock %}
+{% block body %}
+    <div id="chat-log" class="container fa-border">
+      {% for msg in messages %}
+          {% if msg.from == request.user %}
+              <div class="col-sm-offset-4 col-sm-8">
+                  <p class="fa-border text-right" style="word-wrap: break-word">{{ msg.text }}&emsp;
+                  <sub style="font-size: xx-small">{{ msg.date.time }}</sub></p>
+              </div><br>
+          {% else %}
+              <div class="fa-border col-sm-8">
+              <p class=""><b>{{ msg.from }}</b>:<span style="word-wrap: break-word;"> {{ msg.text }}&emsp;</span>
+                  <sub style="font-size: xx-small">{{ msg.date.time }}</sub></p>
+              </div><br>
+          {% endif %}
+      {% endfor %}
+    </div>
+    <br>
+    <div class="container">
+    <form class="chat-form" action="{% url 'chat:chatMessage' room_id %}" style="display: flex">
+        {% csrf_token %}
+        <input type="text" class="chat-msg">
+        <button class="btn btn-sm btn-info submit-msg" type="submit">Send</button>
+    </form>
+    </div>
+{% endblock %}
+
+{% block extra-head %}
+    <script>
+    $(document).ready(function () {
+        $('.chat').addClass('active');
+        $('.submit-msg').click(function (e) {
+            e.preventDefault();
+            var Url = $('.chat-form').attr('action');
+            var text = $('.chat-msg').val();
+            var user = {{ request.user.pk }};
+            $.ajax({
+                url: Url,
+                method: "GET",
+                data:{
+                    'user_id': user,
+                    'text': text,
+                },
+                success: function (data) {
+                    $('.chat-msg').val('');
+                }, error: function (error) {
+                    console.log(error);
+                }
+            });
+        })
+    });
+    </script>
+{% endblock %}

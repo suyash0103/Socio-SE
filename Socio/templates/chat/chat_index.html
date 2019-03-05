@@ -1,0 +1,167 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+
+{% load thumbnail %}
+{% block title %}
+Chats
+{% endblock %}
+
+
+{% block body %}
+<script src="http://localhost:4000/socket.io/socket.io.js"></script>
+.
+<div class="container col-sm-offset-2 col-sm-8">
+    <div class="con-title mg-3">
+        <div class="chat-user-info">
+            {% if room.group %}
+                <img src="../{% thumbnail room.group.picture 140x140 %}" width="100" height="100">
+                <h3>{{ room.group.name }} <span class="status-info"></span></h3>
+            {% else %}
+                {% for m in room.members.all %}
+                {% if request.user != m %}
+                    <img src="../{% thumbnail m.profile.picture 140x140 %}" width="50" height="50">
+                    <h3>{{ m.profile.firstName }} {{ m.profile.lastName }}</h3>
+                {% endif %}
+                {% endfor %}
+            {% endif %}
+            <div class="location" ><img class="float-right" src="{% static 'images/location.png' %}" width="30px" height="30px"></div>
+
+        </div>
+    </div>
+    <div id="message-list"  data-mcs-theme="dark" style="height:500px;overflow-y:scroll;width:100%;">
+        {% for message in messages %}
+            {% if message.user == request.user %}
+            <div class="text-right chat-msg">
+                <p>{{ message.text }}</p>
+                <span>{{ message.date.time }}</span>
+            </div>
+            {% else %}
+            <div class="chat-msg st2">
+
+                <p><span>{{ message.user }}</span>{{ message.text }}</p>
+                <span>{{ message.date.time }}</span>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div><!--chat-list end-->
+    <div class="typing-msg">
+        <form>
+            <textarea id="message" placeholder="Type a message here"></textarea>
+            <button type="submit"><i class="fa fa-send"></i></button>
+        </form>
+    </div><!--typing-msg end-->
+</div>
+
+<script>
+
+    // host of the server
+    var host = 'localhost';
+    var port = '4000';
+
+    var socket = io(host + ':' + port);
+
+    // when the document is ready, scrolls down the page to the last page if there are messages
+    $(function() {
+        updateScroll();
+    });
+
+    $('.chat').addClass('active');
+    var user = "{{ request.user }}";
+    // on the form submit
+    $('form').submit(function() {
+        // gets the elements by ids
+        var url = {% url 'chat:chat_save_message' %}
+        var msg = $('#message');
+        var room = {{ room.id }};
+        // if the message and the name aren't empty or aren't spaces,
+        if(msg.val() !== "" && user !== "") {
+            // creates the message object
+            msgObject = {
+                'room': room,
+                'user': user,
+                'message': msg.val(),
+                'date': new Date(),
+            };
+
+            // emits the msgObject to the server
+            socket.emit('message', msgObject);
+        }
+
+        // clear the message element
+        msg.val('');
+        // returns false to avoid the form to reload the page
+        return false;
+    });
+
+    $(".location").click(function () {
+        console.log('location');
+       var msg = "{{ request.user }} shared his location";
+       var url = '{% url "chat:location" room.pk request.user.pk %}' ;
+        var room = {{ room.id }};
+        // if the message and the name aren't empty or aren't spaces,
+            // creates the message object
+            msgObject = {
+                'room': room,
+                'user': user,
+                'message': msg,
+                'url':url,
+                'date': new Date(),
+            };
+
+            // emits the msgObject to the server
+            socket.emit('location', msgObject);
+        return false;
+    });
+
+    // receives the message object from the server
+    socket.on('getMessage', function(msgObject) {
+        // gets the fields of the message
+        var name = msgObject.user;
+        var msg = msgObject.message;
+        var date = new Date(msgObject.date);
+        var room = msgObject.room;
+        time = dateFormat(date, " h:MM tt");
+        if(room == {{ room.id }}) {
+            if (name != user) {
+                new_message = '<div class="chat-msg st2">' + '<p><span >' + name + ':</span>&emsp;' + msg + '</p><span>' + time + '</span>' + '</div>'
+                // appends the message to the screen
+            }
+            else {
+                new_message = '<div class="text-right chat-msg"><p>' + msg + '</p><span>' + time + '</span></div>'
+            }
+            $('#message-list').append(new_message);
+            console.log(document.getElementById("message-list"));
+        }
+        // updates the scroll
+        updateScroll();
+    });
+
+    socket.on('getLocation', function(msgObject) {
+        // gets the fields of the message
+        var name = msgObject.user;
+        var msg = msgObject.message;
+        var url = msgObject.url;
+        var date = new Date(msgObject.date);
+        var room = msgObject.room;
+        time = dateFormat(date, " h:MM tt");
+        if(room == {{ room.id }}) {
+            if (name != user) {
+                new_message = '<a href='+url+'><div class="chat-msg st2">' + '<p><span >' + name + ':</span>&emsp;' + msg + '</p><span>' + time + '</span>' + '</div></a>'
+                // appends the message to the screen
+            }
+            else {
+                new_message = '<a href='+url+'><div class="text-right chat-msg"><p>' + msg + '</p><span>' + time + '</span></div></a>'
+            }
+            $('#message-list').append(new_message);
+        }
+        {#// updates the scroll#}
+        updateScroll();
+    });
+
+    function updateScroll(){
+        var element = document.getElementById("message-list");
+        element.scrollTop = element.scrollHeight;
+    }
+</script>
+
+{% endblock %}

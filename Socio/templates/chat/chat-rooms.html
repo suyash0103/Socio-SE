@@ -1,0 +1,49 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+
+{% load thumbnail %}
+{% block title %}
+Chats
+{% endblock %}
+{% block extra-head %}
+    <script>
+        $(document).ready(function () {
+            $('.chat').addClass('active');
+        })
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+    {% if all_chats %}
+        <div class="companies-list">
+        <div class="row">
+            {%  for chat in all_chats %}
+
+                <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="company_profile_info">
+                    <div class="company-up-info">
+                        {% if chat.group %}
+                            <img src="../{% thumbnail chat.group.picture 140x140 %}" width="100" height="100">
+                            <a href="{% url 'groups:groupDetail' chat.group %}"><h3>{{ chat.group.name }} </h3></a>
+                            <button class="follow btn"><a href="{% url 'chat:chats' chat.id %}">Chat</a></button>
+                        {% else %}
+                            {% for m in chat.members.all %}
+                            {% if m != request.user %}
+                                <img src="../{% thumbnail m.profile.picture 140x140 %}" width="100" height="100">
+                                <h3><a href="{% url 'profiles:profileView' m %}">{{ m.profile.firstName }} {{ m.profile.lastName }}</a></h3>
+                                <button class="follow btn"><a href="{% url 'chat:chats' chat.id %}">Chat</a></button>
+
+                            {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                </div>
+
+            {%  endfor %}
+        </ul>
+    {% else %}
+        <h3>No Chats</h3>
+    {%  endif %}
+    </div>
+{% endblock %}
