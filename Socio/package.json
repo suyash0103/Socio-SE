@@ -1,0 +1,19 @@
+{
+  "name": "socket",
+  "version": "1.0.0",
+  "description": "a web socket for the django app",
+  "main": "nodejs/index.js",
+  "scripts": {
+    "start": "node nodejs/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shrey920/socio.git"
+  },
+  "author": "shreyas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shrey920/socio/issues"
+  },
+  "homepage": "https://github.com/shrey920/socio#readme"
+}
