@@ -1,0 +1,30 @@
+ {%  extends 'base.html' %}
+{% load staticfiles %}
+
+ {% block body %}
+     <div class="post-project">
+            <h3>Send a File</h3>
+            <div class="post-project-fields">
+                <form action="" method="post" enctype="multipart/form-data" style="margin-left: 25%;">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="row container">
+{#                            <div class="col-sm-offset-2 col-sm-8">#}
+{#                                <span class="text-danger small">{{ field.errors }}</span>#}
+{#                            </div>#}
+                            <label class="control-label col-sm-2 " for="title">{{ field.label_tag }}</label>
+                            <div class="col-sm-4">{{ field }}</div>
+                            <br>
+                        </div>
+                    {% endfor %}
+                <div>
+                    <ul style="margin-left: 12.5%;">
+                        <li><button class="active" type="submit" value="post">Send</button></li>
+                        <li><a href="{% url 'home' %}" title="">Cancel</a></li>
+                    </ul>
+                </div>
+                </form>
+            </div><!--post-project-fields end-->
+        </div><!--post-project end-->
+
+ {% endblock %}

@@ -1,0 +1,47 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block title %}
+Messages
+{% endblock %}
+{% block extra-head %}
+    <script>
+        $(document).ready(function () {
+            $('.message').addClass('active');
+        })
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+    {% if all_messages %}
+        <div class="companies-list">
+        <div class="row">
+        {%  for r in all_messages %}
+
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                <div class="company_profile_info">
+                    <div class="company-up-info">
+                        <img src="../{{ r.sender.profile.picture }}" width="100px" height="100px" alt="">
+                        <h3>{{ r.sender.profile.firstName }} {{ r.sender.profile.lastName }}</h3>
+                        <p><img src="{% static 'images/clock.png' %}" alt="">{{ r.date }}</p>
+                        <div style="border: solid">
+                            <h3 style="color: red">
+                                {{ r.sender }} is in an emergency
+                            </h3>
+                        </div>
+                        <ul>
+                            <li><a href="{% url 'message:location' r.sender.pk %}" title="" class="follow">Check Location</a></li>
+                        </ul>
+                    </div>
+
+                </div><!--company_profile_info end-->
+            </div>
+            {%  endfor %}
+        </div>
+        </div>
+
+    {% else %}
+        <h3>No Messages</h3>
+    {%  endif %}
+    </div>
+{% endblock %}

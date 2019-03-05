@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from .models import *
-# from chat.models import *
+from chat.models import *
 # Create your views here.
 
 
@@ -33,10 +33,10 @@ class FriendRequestView(LoginRequiredMixin, generic.ListView):
 @login_required(login_url = '/login')
 def acceptRequest(request,pk):
     sender=User.objects.get(pk=pk)
-    # chat = ChatRoom()
-    # chat.eid = str(sender)+'-'+str(request.user)
-    # chat.save()
-    # chat.members.add(sender, request.user)
+    chat = ChatRoom()
+    chat.eid = str(sender)+'-'+str(request.user)
+    chat.save()
+    chat.members.add(sender, request.user)
 
     request.user.profile.friends.add(sender)
     sender.profile.friends.add(request.user)

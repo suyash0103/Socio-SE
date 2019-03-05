@@ -1,0 +1,44 @@
+{%  extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+Friend Requests
+{% endblock %}
+{% block extra-head %}
+    <script>
+        $(document).ready(function () {
+            $('.request').addClass('active');
+        })
+    </script>
+{% endblock %}
+{% block body %}
+    <div class="container">
+    {% if all_requests %}
+        <div class="companies-list">
+        <div class="row">
+            {%  for r in all_requests %}
+
+                <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                    <div class="company_profile_info">
+                        <div class="company-up-info">
+                            <img src="../{{ r.sender.profile.picture }}" width="100px" height="100px" alt="">
+                            <h3>{{ r.sender.profile.firstName }} {{ r.sender.profile.lastName }}</h3>
+                            <h4>{{ r.sender.profile.bio }}</h4>
+                            <span><img src="{% static 'images/clock.png' %}" alt="">{{ r.date }}</span>
+                            <a href="{% url 'profiles:profileView' r.sender %}" title="" class="view-more-pro">View Profile</a>
+                            <ul>
+                                <li><a href="{% url 'requests:acceptRequest' r.sender.id %}" title="" class="follow">Accept</a></li>
+                                <li><a href="{% url 'requests:rejectRequest' r.id %}" title="" class="message-us">Reject</a></li>
+                            </ul>
+                        </div>
+
+                    </div><!--company_profile_info end-->
+                </div>
+            {%  endfor %}
+        </div>
+        </div>
+    {% else %}
+        <h3>No Requests</h3>
+    {%  endif %}
+    </div>
+{% endblock %}
