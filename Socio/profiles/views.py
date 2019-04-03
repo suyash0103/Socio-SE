@@ -41,6 +41,8 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         p = set(user.post_owner.all())
         p = reversed(list(p))
 
+
+
         groups = user.group_member.all()
 
         return {'profile' :profile,'user':user,'valid':valid,'friendship':friendship, 'all_posts': p, 'friends':friends, 'groups': groups}

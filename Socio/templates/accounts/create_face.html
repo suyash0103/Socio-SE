@@ -1,0 +1,70 @@
+{% extends "accounts/auth_base.html" %}
+
+{% load staticfiles %}
+{% load static %}
+{% block title %}
+Add Face Data
+{% endblock %}
+<!-- CSS -->
+{% block form %}
+
+
+<!-- -->
+    <div class="col-sm-4  post-project" style="margin-left: 30%;">
+
+         <div id="my_camera"></div>
+        {# <input type=button value="Configure" onClick="configure()">#}
+         <input class="btn active" style="margin-left: 25%;"  type=button value="Take Snapshot" onClick="take_snapshot()">
+    </div>
+
+
+ <!-- Script -->
+ <script type="text/javascript" src="{% static 'webcam.min.js' %}"></script>
+
+ <!-- Code to handle taking the snapshot and displaying it locally -->
+ <script language="JavaScript">
+
+ // Configure a few settings and attach camera
+  Webcam.set({
+   width: 320,
+   height: 240,
+   image_format: 'jpeg',
+   jpeg_quality: 90
+  });
+  Webcam.attach( '#my_camera' );
+
+ // A button for taking snaps
+
+
+ // preload shutter audio clip
+
+ function take_snapshot() {
+  // take snapshot and get image data
+  Webcam.snap( function(data_uri) {
+  // display results in page
+  console.log(data_uri);
+  $.ajax({
+      type: 'POST',
+      url: "{% url 'accounts:createFaceEncoding' %}",
+      data: data_uri,
+      dataType: "text",
+      success: function(resultData) {
+
+          if(resultData!=""){
+              alert("Face Data of "+resultData+" configured");
+              window.location.href = "{% url 'home' %}";
+          }
+          else{
+              alert("Couldn't add face\n Try again");
+              window.location.href = "{% url 'accounts:createFace' %}";
+          }
+      }
+    });
+  } );
+
+  Webcam.reset();
+ }
+
+
+</script>
+{% endblock %}

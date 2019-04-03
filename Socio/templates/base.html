@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
- {% load staticfiles %}
+{% load staticfiles %}
 {% load static %}
 <title>{% block title %}Title{% endblock %}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,7 +42,7 @@
             {% block navbar %}
             <div class="header-data">
                 <div class="logo">
-                    <a href="{% url 'home' %}" title=""><img src="{% static 'images/logo.png' %}" alt=""></a>
+                    <a href="{% url 'home' %}" title=""><img src="{% static 'images/logo.jpeg' %}" width="40px" height="40px" alt=""></a>
                 </div><!--logo end-->
                 <div class="search-bar">
                     <form  class="navbar-form navbar-left" role="search" method="get" action="{% url 'profiles:allProfiles' %}">
@@ -119,9 +119,15 @@
         </div>
     {% block logout %}
         {% if request.user != 'AnonymousUser' %}
-        <a href="{% url 'accounts:logout' %}">
-            <div class="nav navbar-nav navbar-right fa fa-sign-out" style="float: right; color: white ; border: 0px;   margin-top: 1%; font-size:24px;"> </div>
-         </a>
+            <a href="{% url 'accounts:logout' %}">
+                <div class="nav navbar-nav navbar-right fa fa-sign-out" style="float: right; color: white ; border: 0px;   margin-top: 1%; font-size:24px;"> </div>
+             </a>
+            {% if not request.user.face %}
+                <a href="{% url 'accounts:createFace' %}">
+                <div class="nav navbar-nav navbar-right fa fa-smile-o" style="float: right; color: white ; border: 0px;   margin-top: 1%; margin-right:1%; font-size:24px;"> </div>
+                </a>
+            {% endif %}
+
         {% endif %}
     {% endblock %}
     </header><!--header end-->

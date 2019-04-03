@@ -38,6 +38,25 @@ Posts
                                         </li>
                                     </ul>
                                 </div><!--user-data end-->
+                                <div class="suggestions full-width">
+										<div class="sd-title">
+											<h3>Suggestions</h3>
+											<i class="la la-ellipsis-v"></i>
+										</div><!--sd-title end-->
+										<div class="suggestions-list">
+                                            {% for s in context.suggestions %}
+											<div class="suggestion-usd">
+                                                <a href="{% url 'profiles:profileView' s %}">
+												<img src="{{ s.profile.picture }}" alt="" width="30px" height="30px">
+												<div class="sgt-text">
+													<h4>{{ s.profile.firstName }} {{ s.profile.lastName }}</h4>
+													<span>{{ s.profile.bio }}</span>
+												</div>
+												</a>
+											</div>
+                                            {% endfor %}
+										</div><!--suggestions-list end-->
+									</div><!--suggestions end-->
                             </div><!--main-left-sidebar end-->
                         </div>
                         <div class="col-lg-6 col-md-8 no-pd">

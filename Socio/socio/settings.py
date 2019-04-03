@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+
 from django.urls import reverse_lazy
 
 
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'authtools',
     'crispy_forms',
     'easy_thumbnails',
+    'webcam',
     'chat',
     'posts',
     'message',

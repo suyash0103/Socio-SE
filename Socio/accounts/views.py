@@ -9,8 +9,68 @@ from authtools import views as authviews
 from braces import views as bracesviews
 from django.conf import settings
 from . import forms
+from .models import *
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
+
+def face(request):
+    return render(request, 'accounts/face_login.html')
+
+@login_required(login_url='/login')
+def createFace(request):
+    return render(request, 'accounts/create_face.html')
+
+@csrf_exempt
+@login_required(login_url='/login')
+def createFaceEncoding(request):
+    if request.POST:
+        # save it somewhere
+        f = open('accounts/userimages/temp.jpg', 'wb')
+        b = base64.decodestring(request.body[23:])
+        f.write(b)
+        f.close()
+        f=Face()
+        f.user= request.user
+        picture = face_recognition.load_image_file("accounts/userimages/temp.jpg")
+        face_encoding = face_recognition.face_encodings(picture)[0]
+        f.face_encoding = base64.b64encode(face_encoding)
+        f.save()
+
+        # return the URL
+        return HttpResponse(request.user.username)
+    else:
+        return HttpResponse('')
+
+
+@csrf_exempt
+def loginFace(request):
+    if request.POST:
+        # save it somewhere
+        f = open('accounts/webcamimages/temp.jpg', 'wb')
+        b = base64.decodestring(request.body[23:])
+        f.write(b)
+        f.close()
+        unknown_picture = face_recognition.load_image_file("accounts/webcamimages/temp.jpg")
+        unknown_face_encoding = face_recognition.face_encodings(unknown_picture)[0]
+        users = User.objects.all()
+        for u in users:
+            try :
+                results = face_recognition.compare_faces([u.face.get_face_encoding()], unknown_face_encoding)
+                print(u,results)
+                if results[0]:
+                    auth.login(request, u)
+                    return HttpResponse(u)
+            except:
+                pass
+
+        # return the URL
+        return HttpResponse("")
+    else:
+        return HttpResponse('no data')
 
 
 class LoginView(bracesviews.AnonymousRequiredMixin, authviews.LoginView):

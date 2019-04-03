@@ -12,7 +12,7 @@
                             <img src="../{% thumbnail m.group.picture 50x50 %}" alt="">
                             <div class="usy-name col-sm-2"><h2><a href="{% url 'groups:groupDetail' m.group.name %}">
                                 {{ m.group.name }}
-                            </a></h2></div>
+                            </a></h2></div><br><br>
                             {% endif %}
                             <img src="../{% thumbnail m.owner.profile.picture 40x40 %}" alt="">
                             <div class="usy-name">
