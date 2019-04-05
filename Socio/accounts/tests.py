@@ -158,3 +158,4 @@ class TestAdminViews(TestCase):
         if result == None:
             print(Fore.GREEN + "Logout page verified")
             print(Style.RESET_ALL)
+
