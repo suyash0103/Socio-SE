@@ -2,7 +2,7 @@ certifi==2018.1.18
 chardet==3.0.4
 Click==7.0
 colorama==0.4.1
-Django==2.0.3
+Django==2.2.10
 django-authtools==1.6.0
 django-braces==1.12.0
 django-cleanup==2.1.0
