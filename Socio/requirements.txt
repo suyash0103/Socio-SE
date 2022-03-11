@@ -17,7 +17,7 @@ face-recognition-models==0.3.0
 gripcontrol==3.2.1
 idna==2.6
 numpy==1.16.2
-Pillow==5.0.0
+Pillow==9.0.1
 pubcontrol==2.4.2
 PyJWT==1.6.1
 pytz==2018.3
