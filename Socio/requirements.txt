@@ -19,7 +19,7 @@ idna==2.6
 numpy==1.16.2
 Pillow==5.0.0
 pubcontrol==2.4.2
-PyJWT==1.6.1
+PyJWT==2.4.0
 pytz==2018.3
 requests==2.18.4
 six==1.11.0
